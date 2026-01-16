@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
 
         // Use Vercel Blob Storage in production, local filesystem in development
         const blobReadWriteToken = process.env.BLOB_READ_WRITE_TOKEN;
+        const isVercel = process.env.VERCEL === "1";
 
         if (blobReadWriteToken) {
             // Production: Use Vercel Blob Storage
@@ -42,14 +43,37 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ url: blob.url });
             } catch (blobError: any) {
                 console.error("Vercel Blob Storage error:", blobError);
-                // Fallback to local filesystem if blob fails
+                console.error("Blob error details:", {
+                    message: blobError?.message,
+                    status: blobError?.status,
+                    code: blobError?.code,
+                });
+                
+                // On Vercel, we can't use filesystem, so return error
+                if (isVercel) {
+                    return NextResponse.json(
+                        { 
+                            error: "Ошибка при загрузке в Blob Storage. Проверьте настройки Vercel Blob Storage.",
+                            details: process.env.NODE_ENV === "development" ? blobError?.message : undefined
+                        },
+                        { status: 500 }
+                    );
+                }
+                // Fallback to local filesystem only in development
                 console.log("Falling back to local filesystem storage");
             }
+        } else if (isVercel) {
+            // On Vercel without Blob Storage token, return error
+            return NextResponse.json(
+                { 
+                    error: "BLOB_READ_WRITE_TOKEN не установлен. Создайте Vercel Blob Storage в настройках проекта."
+                },
+                { status: 500 }
+            );
         }
 
-        // Development or fallback: Use local filesystem
-        // Note: On Vercel, this won't persist between deployments
-        // For production, you should set up Vercel Blob Storage
+        // Development only: Use local filesystem
+        // Note: This only works in local development, not on Vercel
         try {
             const bytes = await file.arrayBuffer();
             const buffer = Buffer.from(bytes);
