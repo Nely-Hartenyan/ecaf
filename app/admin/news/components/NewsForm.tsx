@@ -29,7 +29,7 @@ export default function NewsForm({ initialData }: NewsFormProps) {
         excerpt: initialData?.excerpt || "",
         content: initialData?.content || "",
         coverUrl: initialData?.coverUrl || "",
-        published: initialData?.published || false,
+        published: initialData?.published ?? true, // Default to true for new items
     });
 
     // Auto-generate slug from title when title changes and auto-generate is enabled
