@@ -5,21 +5,25 @@
 ### Вариант 1: Использовать базу данных Vercel (НЕ нужно запускать локальную БД!)
 
 1. **Установите Vercel CLI** (если еще не установлен):
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Подключитесь к проекту:**
+
    ```bash
    vercel link
    ```
 
 3. **Получите переменные окружения из Vercel:**
+
    ```bash
    vercel env pull .env.local
    ```
 
 4. **Проверьте, что DATABASE_URL установлен:**
+
    ```bash
    cat .env.local | grep DATABASE_URL
    ```
@@ -53,6 +57,7 @@ docker-compose up -d
 ### 3. Настройте .env.local
 
 Создайте или отредактируйте `.env.local`:
+
 ```env
 DATABASE_URL="postgresql://nely@localhost:5432/college_db?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
@@ -84,6 +89,7 @@ npm run dev
 ## Файл .env.local
 
 Файл `.env.local` содержит настройки для подключения:
+
 - `DATABASE_URL` - подключение к базе данных (Vercel или локальная)
 - `NEXTAUTH_URL` - http://localhost:3000
 - `NEXTAUTH_SECRET` - для разработки
