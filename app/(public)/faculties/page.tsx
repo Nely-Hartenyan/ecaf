@@ -1,5 +1,8 @@
 import { prisma } from "../../../lib/db";
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic';
+
 export default async function FacultiesPage() {
     const faculties = await prisma.faculty.findMany({
         orderBy: { name: "asc" },

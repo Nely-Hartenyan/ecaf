@@ -16,15 +16,24 @@
 
 ### Шаг 3: Настройка базы данных
 
-**Вариант 1: Vercel Postgres (Рекомендуется)**
+**Вариант 1: Prisma Postgres (РЕКОМЕНДУЕТСЯ - самый простой для Prisma)**
+
+1. В настройках проекта → "Storage" → "Create New" → выберите "Prisma Postgres" из Marketplace
+2. Нажмите "Create" или "Add" для добавления Prisma Postgres
+3. Prisma Postgres автоматически создаст все необходимые переменные окружения:
+   - `DATABASE_URL` (готова для использования с Prisma)
+   - Другие необходимые переменные для подключения
+
+**Вариант 2: Vercel Postgres (альтернатива)**
 
 1. В настройках проекта → "Storage" → "Create Database" → "Postgres"
 2. Создайте базу данных
 3. Vercel автоматически создаст переменные:
    - `POSTGRES_PRISMA_URL` (для Prisma)
    - `POSTGRES_URL_NON_POOLING` (для прямых подключений)
+4. Создайте переменную `DATABASE_URL="${POSTGRES_PRISMA_URL}"` в Environment Variables
 
-**Вариант 2: Внешний провайдер (Neon, Supabase, Railway)**
+**Вариант 3: Внешний провайдер (Neon, Supabase, Railway)**
 
 1. Создайте PostgreSQL базу данных
 2. Скопируйте connection string
@@ -34,13 +43,29 @@
 
 В настройках проекта Vercel → "Settings" → "Environment Variables" добавьте:
 
+**Если используете Prisma Postgres (Вариант 1):**
+
+✅ **Отлично!** Prisma Postgres автоматически создаст переменную `DATABASE_URL` - ничего дополнительно настраивать не нужно!
+
+**Если используете Vercel Postgres (Вариант 2):**
+
+Vercel автоматически создаст переменные `POSTGRES_PRISMA_URL` и `POSTGRES_URL_NON_POOLING`. 
+Для Prisma миграций нужно создать `DATABASE_URL`:
+
 ```env
-# Если используете Vercel Postgres, добавьте:
+# Создайте переменную DATABASE_URL из POSTGRES_PRISMA_URL:
 DATABASE_URL="${POSTGRES_PRISMA_URL}"
+```
 
-# Или если используете внешний провайдер:
+**Если используете внешний провайдер (Вариант 3):**
+
+```env
 DATABASE_URL="postgresql://user:password@host:5432/dbname?schema=public"
+```
 
+**Обязательные переменные для всех вариантов:**
+
+```env
 # NextAuth (ОБЯЗАТЕЛЬНО)
 NEXTAUTH_URL="https://your-project.vercel.app"
 NEXTAUTH_SECRET="your-secret-key"  # Сгенерируйте: openssl rand -base64 32
@@ -132,7 +157,8 @@ NEXTAUTH_SECRET="your-secret-key"  # Сгенерируйте: openssl rand -bas
 
 - [ ] Код закоммичен и запушен в Git
 - [ ] Проект собирается локально (`npm run build`)
-- [ ] База данных создана
+- [ ] База данных создана (рекомендуется Prisma Postgres из Marketplace)
+- [ ] Переменная `DATABASE_URL` настроена (создается автоматически для Prisma Postgres)
 - [ ] Все переменные окружения настроены
 - [ ] `NEXTAUTH_SECRET` сгенерирован
 - [ ] `NEXTAUTH_URL` указывает на production домен

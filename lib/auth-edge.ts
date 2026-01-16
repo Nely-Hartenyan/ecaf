@@ -14,9 +14,11 @@ const getAuthSecret = () => {
 // Edge-compatible auth configuration for middleware
 // This doesn't include providers or callbacks that use Node.js modules
 // Minimal configuration for edge runtime
+// Note: providers array is required by NextAuth v5, but empty for edge runtime
 export const { auth } = NextAuth({
     trustHost: true,
     secret: getAuthSecret(),
     session: { strategy: "jwt" },
+    providers: [], // Empty array for edge runtime - actual auth is handled in lib/auth.ts
 });
 

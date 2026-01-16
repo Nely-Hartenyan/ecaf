@@ -1,6 +1,9 @@
 import { prisma } from "../../../../lib/db";
 import { notFound } from "next/navigation";
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic';
+
 interface NewsItemPageProps {
     params: Promise<{ slug: string }>;
 }

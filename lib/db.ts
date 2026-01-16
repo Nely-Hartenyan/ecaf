@@ -19,8 +19,9 @@ const connectionString =
 
 if (!connectionString) {
     throw new Error(
-        "DATABASE_URL или POSTGRES_URL_NON_POOLING не установлены. " +
-        "Пожалуйста, настройте переменную окружения для подключения к базе данных."
+        "Не установлена переменная окружения для подключения к базе данных. " +
+        "Установите одну из следующих переменных: DATABASE_URL, POSTGRES_URL_NON_POOLING или POSTGRES_PRISMA_URL. " +
+        "Для Vercel Postgres используйте: DATABASE_URL=\"${POSTGRES_PRISMA_URL}\""
     );
 }
 
