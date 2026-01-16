@@ -3,6 +3,7 @@ import Link from "next/link";
 
 // Force dynamic rendering to avoid build-time database access
 export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Disable caching completely
 
 export default async function NewsPage() {
     const items = await prisma.news.findMany({

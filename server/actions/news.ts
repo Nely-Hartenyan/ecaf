@@ -140,9 +140,13 @@ export async function upsertNews(formData: FormData) {
         }
 
         console.log("Revalidating paths...");
-        revalidatePath("/news");
-        revalidatePath("/admin/news");
-        revalidatePath(`/news/${news.slug}`);
+        // Revalidate all news-related paths
+        revalidatePath("/news", "page");
+        revalidatePath("/news", "layout");
+        revalidatePath("/admin/news", "page");
+        revalidatePath(`/news/${news.slug}`, "page");
+        // Also revalidate the root to ensure navigation updates
+        revalidatePath("/", "layout");
         
         console.log("Redirecting to /admin/news");
         redirect("/admin/news");

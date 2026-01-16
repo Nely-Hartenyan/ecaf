@@ -9,26 +9,31 @@
 ### Вариант 1: Через Vercel CLI (Рекомендуется)
 
 1. **Установите Vercel CLI** (если еще не установлен):
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Подключитесь к проекту:**
+
    ```bash
    vercel link
    ```
 
 3. **Получите переменные окружения:**
+
    ```bash
    vercel env pull .env.local
    ```
 
 4. **Запустите seed скрипт:**
+
    ```bash
    npx prisma db seed
    ```
 
    Это создаст трех администраторов:
+
    - `admin1@college.am` / `Admin12345!`
    - `admin2@college.am` / `Admin12345!`
    - `admin3@college.am` / `Admin12345!`
@@ -36,17 +41,20 @@
 ### Вариант 2: Через Prisma Studio (Визуально)
 
 1. **Подключитесь к проекту Vercel:**
+
    ```bash
    vercel link
    vercel env pull .env.local
    ```
 
 2. **Откройте Prisma Studio:**
+
    ```bash
    npx prisma studio
    ```
 
 3. **Создайте пользователя вручную:**
+
    - Откройте модель `User`
    - Нажмите "Add record"
    - Заполните:
@@ -92,13 +100,13 @@ async function main() {
   const email = "admin@college.am";
   const password = "Admin12345!";
   const passwordHash = await bcrypt.hash(password, 10);
-  
+
   await prisma.user.upsert({
     where: { email },
     update: { passwordHash },
     create: { email, passwordHash, role: "ADMIN" },
   });
-  
+
   console.log(`✅ Администратор создан: ${email} / ${password}`);
 }
 
@@ -112,6 +120,7 @@ main()
 ```
 
 Запустите:
+
 ```bash
 npx tsx create-admin.ts
 ```
@@ -119,6 +128,7 @@ npx tsx create-admin.ts
 ## Проверка
 
 После создания администратора попробуйте войти:
+
 - Email: `admin1@college.am` (или тот, который вы создали)
 - Password: `Admin12345!`
 
