@@ -238,6 +238,7 @@ ecaf/
 
 - [DEPLOY.md](./DEPLOY.md) - Инструкции по деплою на Vercel
 - [SETUP_LOCAL.md](./SETUP_LOCAL.md) - Подробная настройка локальной разработки
+- [TEAM_SETUP.md](./TEAM_SETUP.md) - Добавление участников в проект Vercel
 - [VERCEL_SETUP.md](./VERCEL_SETUP.md) - Настройка переменных окружения на Vercel
 - [CREATE_ADMIN.md](./CREATE_ADMIN.md) - Создание администраторов
 - [QUICK_START.md](./QUICK_START.md) - Быстрый старт
