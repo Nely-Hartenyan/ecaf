@@ -8,7 +8,11 @@ const getAuthSecret = () => {
         // Development fallback - in production, AUTH_SECRET must be set
         return "development-secret-change-in-production";
     }
-    throw new Error("AUTH_SECRET environment variable is required in production");
+    throw new Error(
+        "AUTH_SECRET or NEXTAUTH_SECRET environment variable is required in production. " +
+        "Please set one of these variables in your Vercel project settings: " +
+        "Settings → Environment Variables → Add AUTH_SECRET or NEXTAUTH_SECRET"
+    );
 };
 
 // Edge-compatible auth configuration for middleware

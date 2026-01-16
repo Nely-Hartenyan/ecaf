@@ -66,9 +66,12 @@ DATABASE_URL="postgresql://user:password@host:5432/dbname?schema=public"
 **Обязательные переменные для всех вариантов:**
 
 ```env
-# NextAuth (ОБЯЗАТЕЛЬНО)
+# NextAuth (ОБЯЗАТЕЛЬНО - установите ОБЕ переменные!)
 NEXTAUTH_URL="https://your-project.vercel.app"
 NEXTAUTH_SECRET="your-secret-key"  # Сгенерируйте: openssl rand -base64 32
+
+# ИЛИ используйте AUTH_SECRET (NextAuth v5 также поддерживает это):
+AUTH_SECRET="your-secret-key"  # Альтернатива NEXTAUTH_SECRET
 
 # Vercel Blob Storage (создается автоматически при создании Blob Storage)
 # BLOB_READ_WRITE_TOKEN="vercel_blob_rw_..." # Добавляется автоматически
@@ -76,8 +79,10 @@ NEXTAUTH_SECRET="your-secret-key"  # Сгенерируйте: openssl rand -bas
 
 **Важно:**
 
-- `NEXTAUTH_URL` должен быть вашим production доменом
+- ⚠️ **ОБЯЗАТЕЛЬНО** установите `NEXTAUTH_SECRET` или `AUTH_SECRET` на Vercel!
+- `NEXTAUTH_URL` должен быть вашим production доменом (например: `https://your-project.vercel.app`)
 - `NEXTAUTH_SECRET` должен быть уникальным и безопасным
+- Для генерации секрета используйте: `openssl rand -base64 32`
 
 ### Шаг 5: Деплой
 
@@ -159,11 +164,28 @@ NEXTAUTH_SECRET="your-secret-key"  # Сгенерируйте: openssl rand -bas
 - [ ] Проект собирается локально (`npm run build`)
 - [ ] База данных создана (рекомендуется Prisma Postgres из Marketplace)
 - [ ] Переменная `DATABASE_URL` настроена (создается автоматически для Prisma Postgres)
-- [ ] Все переменные окружения настроены
-- [ ] `NEXTAUTH_SECRET` сгенерирован
-- [ ] `NEXTAUTH_URL` указывает на production домен
+- [ ] ⚠️ **ОБЯЗАТЕЛЬНО:** `NEXTAUTH_SECRET` или `AUTH_SECRET` установлен на Vercel
+- [ ] `NEXTAUTH_URL` указывает на production домен (например: `https://your-project.vercel.app`)
 - [ ] Vercel Blob Storage создан (токен добавляется автоматически)
 - [ ] Тестовые пароли изменены
+
+### ⚠️ Критически важно: NEXTAUTH_SECRET
+
+**Без этой переменной деплой НЕ пройдет!**
+
+1. Сгенерируйте секретный ключ:
+   ```bash
+   openssl rand -base64 32
+   ```
+
+2. Добавьте в Vercel:
+   - Зайдите в Settings → Environment Variables
+   - Добавьте переменную `NEXTAUTH_SECRET` (или `AUTH_SECRET`)
+   - Вставьте сгенерированный ключ
+   - Выберите все окружения (Production, Preview, Development)
+   - Сохраните
+
+3. Перезапустите деплой после добавления переменной
 
 ## После деплоя
 
