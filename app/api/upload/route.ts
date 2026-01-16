@@ -33,14 +33,24 @@ export async function POST(request: NextRequest) {
 
         if (blobReadWriteToken) {
             // Production: Use Vercel Blob Storage
-            const blob = await put(filename, file, {
-                access: "public",
-                token: blobReadWriteToken,
-            });
+            try {
+                const blob = await put(filename, file, {
+                    access: "public",
+                    token: blobReadWriteToken,
+                });
 
-            return NextResponse.json({ url: blob.url });
-        } else {
-            // Development: Use local filesystem
+                return NextResponse.json({ url: blob.url });
+            } catch (blobError: any) {
+                console.error("Vercel Blob Storage error:", blobError);
+                // Fallback to local filesystem if blob fails
+                console.log("Falling back to local filesystem storage");
+            }
+        }
+
+        // Development or fallback: Use local filesystem
+        // Note: On Vercel, this won't persist between deployments
+        // For production, you should set up Vercel Blob Storage
+        try {
             const bytes = await file.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
@@ -57,11 +67,22 @@ export async function POST(request: NextRequest) {
             // Return URL
             const url = `/uploads/${filename}`;
             return NextResponse.json({ url });
+        } catch (fsError: any) {
+            console.error("Local filesystem error:", fsError);
+            throw new Error(`Failed to save file: ${fsError.message}`);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error uploading file:", error);
+        console.error("Error details:", {
+            message: error?.message,
+            stack: error?.stack,
+            name: error?.name,
+        });
         return NextResponse.json(
-            { error: "Ошибка при загрузке файла" },
+            { 
+                error: "Ошибка при загрузке файла",
+                details: process.env.NODE_ENV === "development" ? error?.message : undefined
+            },
             { status: 500 }
         );
     }
